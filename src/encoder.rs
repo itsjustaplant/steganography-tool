@@ -4,14 +4,14 @@ pub fn check_image_size(width: u32, height: u32, secret: &str) -> bool {
     width * height >= secret.len() as u32
 }
 
-pub fn encode(image: &DynamicImage, secret: &str) {
+pub fn encode(image: &DynamicImage, secret: &str) -> Option<ImageBuffer<Rgba<u16>, Vec<u16>>> {
     // get dimensions
     let (width, height) = image.dimensions();
 
     let can_fit_word = check_image_size(width, height, secret);
 
     if !can_fit_word {
-        panic!("Secret is too long for image");
+        println!("Secret is too long for image");
     }
 
     let rgba_byte_array = image.to_rgba16();
@@ -42,7 +42,13 @@ pub fn encode(image: &DynamicImage, secret: &str) {
     }
 
     match ImageBuffer::save(&new_image, "./result.png") {
-        Ok(_) => println!("Image saved successfully"),
-        Err(_) => panic!("Couldn't save the image"),
+        Ok(_) => {
+            println!("Image saved successfully");
+            return Some(new_image);
+        },
+        Err(_) => {
+            println!("Couldn't save the image");
+            return None;
+        },
     };
 }

@@ -15,6 +15,6 @@ fn main() {
                 decoder::decode(&img_result, arg_2.as_str());
             }
         },
-        Err(_) => panic!("Couldn't find the image"),
+        Err(_) => println!("Couldn't find the image"),
     };
 }
